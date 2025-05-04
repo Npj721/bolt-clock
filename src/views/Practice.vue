@@ -1,12 +1,12 @@
 <template>
   <div class="practice-view">
     <div class="target-time">
-      <h2>Set the clock to match this time:</h2>
+      <h2>{{ $t('practice.title') }}</h2>
       <div class="digital-target">{{ formatTargetTime }}</div>
     </div>
     
     <div class="interactive-clock">
-      <h2>Your answer:</h2>
+      <h2>{{ $t('practice.yourAnswer') }}</h2>
       <div class="clock-controls">
         <button @click="adjustHour(-1)">-1h</button>
         <button @click="adjustHour(1)">+1h</button>
@@ -14,7 +14,7 @@
         <button @click="adjustMinute(1)">+1m</button>
       </div>
       <AnalogClock :time="userTime" :styles="practiceClockStyles" />
-      <button class="check-button" @click="checkAnswer">Check Answer</button>
+      <button class="check-button" @click="checkAnswer">{{ $t('practice.checkAnswer') }}</button>
       <p v-if="feedback" :class="['feedback', feedbackType]">{{ feedback }}</p>
     </div>
   </div>
@@ -22,14 +22,15 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import AnalogClock from '../components/AnalogClock.vue';
 
+const { t } = useI18n();
 const targetTime = ref(new Date());
 const userTime = ref(new Date());
 const feedback = ref('');
 const feedbackType = ref('');
 
-// Format the target time as HH:mm
 const formatTargetTime = computed(() => {
   const hours = targetTime.value.getHours().toString().padStart(2, '0');
   const minutes = targetTime.value.getMinutes().toString().padStart(2, '0');
@@ -47,7 +48,6 @@ const practiceClockStyles = {
   centerDot: { backgroundColor: '#333' }
 };
 
-// Generate a new random time
 const generateNewTime = () => {
   const newTime = new Date();
   newTime.setHours(Math.floor(Math.random() * 12));
@@ -55,13 +55,11 @@ const generateNewTime = () => {
   newTime.setSeconds(0);
   targetTime.value = newTime;
   
-  // Reset user time to midnight
   userTime.value = new Date();
   userTime.value.setHours(0);
   userTime.value.setMinutes(0);
   userTime.value.setSeconds(0);
   
-  // Reset feedback
   feedback.value = '';
 };
 
@@ -84,17 +82,15 @@ const checkAnswer = () => {
   const userM = userTime.value.getMinutes();
 
   if (targetH === userH && targetM === userM) {
-    feedback.value = 'Correct! Well done!';
+    feedback.value = t('practice.correct');
     feedbackType.value = 'success';
-    // Generate new time after a short delay
     setTimeout(generateNewTime, 2000);
   } else {
-    feedback.value = 'Not quite right. Try again!';
+    feedback.value = t('practice.incorrect');
     feedbackType.value = 'error';
   }
 };
 
-// Generate initial time when component is mounted
 generateNewTime();
 </script>
 

@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <nav>
-      <router-link to="/">Current Time</router-link> |
-      <router-link to="/practice">Practice</router-link>
+      <router-link to="/">{{ $t('nav.currentTime') }}</router-link> |
+      <router-link to="/practice">{{ $t('nav.practice') }}</router-link>
     </nav>
     <router-view></router-view>
   </div>
